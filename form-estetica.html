@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kenpri Clinic</title>
+  <style>
+    :root {
+      --areia: #f4e1c6;
+      --terracota: #d2691e;
+      --marrom-texto: #4b2e2e;
+      --areia-clara: #fdf7f1;
+      --areia-media: #f0d9b5;
+    }
+
+    * {
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--areia-clara);
+      color: var(--marrom-texto);
+      line-height: 1.6;
+      padding: 15px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    h1 {
+      text-align: center;
+      margin-bottom: 25px;
+      padding: 15px;
+      color: var(--terracota);
+    
+    }
+
+    h2 {
+      color: var(--terracota);
+      border-bottom: 2px solid var(--areia-media);
+      padding-bottom: 8px;
+      margin-top: 25px;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.08);
+    }
+
+    .form-section {
+      margin-bottom: 25px;
+      padding: 20px;
+      border-radius: 10px;
+      background-color: var(--areia-clara);
+    }
+
+    .professional-section {
+      background-color: var(--areia);
+      border-left: 5px solid var(--terracota);
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #c2a67f;
+      border-radius: 6px;
+      font-size: 15px;
+      margin-top: 5px;
+      background: #fffdf9;
+    }
+
+    textarea {
+      min-height: 80px;
+      resize: vertical;
+    }
+
+    .checkbox-group label {
+      display: inline-block;
+      margin-right: 12px;
+      font-weight: normal;
+    }
+    
+    .checkbox-group {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+   button {
+  background-color: var(--terracota);
+  color: #fff;
+  border: none;
+  padding: 8px 14px;  /* diminui o tamanho */
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;    /* texto menor */
+  transition: background 0.3s;
+}
+
+    button:hover {
+      background-color: #a94f18;
+    }
+
+    #clearBtn {
+      background-color: #8c7a6b;
+    }
+
+    .required::after {
+      content: " *";
+      color: red;
+    }
+
+    .success-message {
+      background-color: #e7f4ea;
+      color: #205522;
+      padding: 12px;
+      border-radius: 6px;
+      margin: 15px 0;
+      display: none;
+      text-align: center;
+    }
+
+    .tabs {
+      display: flex;
+      flex-wrap: wrap;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--areia-media);
+    }
+
+    .tab-button {
+      padding: 10px 18px;
+      background: var(--areia);
+      border: none;
+      cursor: pointer;
+      margin-right: 5px;
+      border-radius: 6px 6px 0 0;
+    }
+
+    .tab-button.active {
+      background: var(--terracota);
+      color: #fff;
+    }
+
+    .tab-content {
+      display: none;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    .patient-list {
+      margin-top: 15px;
+    }
+
+    .patient-item {
+      padding: 15px;
+      border: 1px solid var(--areia-media);
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background-color: var(--areia-clara);
+      transition: 0.3s;
+    }
+
+    .patient-item:hover {
+      background-color: var(--areia);
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #c2a67f;
+      border-radius: 6px;
+      font-size: 15px;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      color: var(--terracota);
+      font-weight: bold;
+    }
+
+    @media (max-width: 600px) {
+      .buttons {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      button {
+        width: 100%;
+      }
+
+       .checkbox-group {
+    grid-template-columns: 1fr; /* fica tudo em coluna no celular */
+  }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Kenpri Clinic</h1>
+
+    <div class="tabs">
+      <button class="tab-button active" onclick="openTab('form-tab', event)">Nova Avaliação</button>
+      <button class="tab-button" onclick="openTab('saved-tab', event)">Avaliações Salvas</button>
+    </div>
+
+    <div id="successMessage" class="success-message">Avaliação salva com sucesso!</div>
+
+    <!-- Aba formulário -->
+    <div id="form-tab" class="tab-content active">
+      <form id="avaliacaoForm">
+        <input type="hidden" id="editIndex">
+
+    
+
+        <div class="form-section professional-section">
+          <h2> AVALIAÇÃO PROFISSIONAL</h2>
+
+
+
+            <div class="form-group">
+            <label for="nomeCliente" class="required">Nome da Cliente:</label>
+            <input type="text" id="nomeCliente" name="nomeCliente" required>
+          </div>
+
+          <div class="form-group">
+            <label for="tipoPele">Tipo de pele (observado):</label>
+            <input type="text" id="tipoPele" name="tipoPele">
+          </div>
+
+          <div class="form-group">
+            <label for="oleosidade">Grau de oleosidade:</label>
+            <input type="text" id="oleosidade" name="oleosidade">
+          </div>
+
+          <div class="form-group">
+            <label>Presença de:</label>
+            <div class="checkbox-group">
+              <label><input type="checkbox" name="presenca[]" value="cravos"> Cravos</label>
+              <label><input type="checkbox" name="presenca[]" value="espinhas"> Espinhas</label>
+              <label><input type="checkbox" name="presenca[]" value="manchas"> Manchas</label>
+              <label><input type="checkbox" name="presenca[]" value="sensibilidade"> Sensibilidade</label>
+              <label><input type="checkbox" name="presenca[]" value="flacidez"> Flacidez</label>
+              <label><input type="checkbox" name="presenca[]" value="linhas_finas"> Linhas finas</label>
+              <label><input type="checkbox" name="presenca[]" value="rugas"> Rugas profundas</label>
+              <label><input type="checkbox" name="presenca[]" value="hiperpigmentacao"> Hiperpigmentação</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="sugestaoProtocolo">Sugestão de protocolo:</label>
+            <textarea id="sugestaoProtocolo" name="sugestaoProtocolo"></textarea>
+          </div>
+        </div>
+
+        <div class="buttons">
+          <button type="button" id="clearBtn">Limpar</button>
+          <button type="submit" id="saveBtn">Salvar Avaliação</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Aba salvas -->
+    <div id="saved-tab" class="tab-content">
+      <div class="search-box">
+        <input type="text" id="searchInput" placeholder="Buscar cliente...">
+      </div>
+      <div id="patientList" class="patient-list"></div>
+    </div>
+
+    <div class="footer">
+      <p>📍 Kenpri Clinic — Cuidar da sua pele é o nosso propósito.</p>
+    </div>
+  </div>
+
+  <!-- Importa jsPDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const { jsPDF } = window.jspdf;
+      const form = document.getElementById('avaliacaoForm');
+      const clearBtn = document.getElementById('clearBtn');
+      const successMessage = document.getElementById('successMessage');
+      const searchInput = document.getElementById('searchInput');
+      const patientList = document.getElementById('patientList');
+      const editIndexInput = document.getElementById('editIndex');
+
+      loadSavedEvaluations();
+
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+
+        const nomeCliente = document.getElementById('nomeCliente').value;
+        if (!nomeCliente) {
+          alert('Por favor, informe o nome da cliente.');
+          return;
+        }
+
+        const avaliacaoData = {
+          nomeCliente,
+          tipoPele: document.getElementById('tipoPele').value,
+          oleosidade: document.getElementById('oleosidade').value,
+          presenca: getSelectedCheckboxes('presenca[]'),
+          sugestaoProtocolo: document.getElementById('sugestaoProtocolo').value,
+          data: new Date().toLocaleDateString('pt-BR')
+        };
+
+        let savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+
+        if (editIndexInput.value !== "") {
+          savedEvaluations[editIndexInput.value] = avaliacaoData;
+          editIndexInput.value = "";
+        } else {
+          savedEvaluations.push(avaliacaoData);
+        }
+
+        localStorage.setItem('avaliacoesProfissionais', JSON.stringify(savedEvaluations));
+
+        successMessage.style.display = 'block';
+        setTimeout(() => { successMessage.style.display = 'none'; }, 2500);
+
+        form.reset();
+        loadSavedEvaluations();
+      });
+
+      clearBtn.addEventListener('click', function () {
+        if (confirm('Tem certeza que deseja limpar o formulário?')) {
+          form.reset();
+          editIndexInput.value = "";
+        }
+      });
+
+      searchInput.addEventListener('input', function () {
+        filterEvaluations(this.value);
+      });
+
+      function getSelectedCheckboxes(name) {
+        const checkboxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+        return Array.from(checkboxes).map(cb => cb.value);
+      }
+
+      function loadSavedEvaluations() {
+        const savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+        displayEvaluations(savedEvaluations);
+      }
+
+      function displayEvaluations(evaluations) {
+        patientList.innerHTML = '';
+
+        if (evaluations.length === 0) {
+          patientList.innerHTML = '<p>Nenhuma avaliação salva ainda.</p>';
+          return;
+        }
+
+        evaluations.forEach((av, index) => {
+          const div = document.createElement('div');
+          div.className = 'patient-item';
+          div.innerHTML = `
+            <strong>${av.nomeCliente}</strong> - ${av.data}
+            <div style="margin-top:8px;font-size:14px;">
+              <strong>Tipo de pele:</strong> ${av.tipoPele || 'Não informado'}<br>
+              <strong>Oleosidade:</strong> ${av.oleosidade || 'Não informado'}<br>
+              <strong>Presença de:</strong> ${av.presenca.join(', ') || 'Nenhuma'}<br>
+              <strong>Sugestão:</strong> ${av.sugestaoProtocolo || 'Nenhuma'}
+            </div>
+            <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap;">
+              <button onclick="editEvaluation(${index})">Editar</button>
+              <button onclick="deleteEvaluation(${index})" style="background:#8c2f2f;">Excluir</button>
+              <button onclick="downloadPDF(${index})" style="background:#4a6fa5;">Baixar PDF</button>
+            </div>
+          `;
+          patientList.appendChild(div);
+        });
+      }
+
+      function filterEvaluations(searchTerm) {
+        const savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+        const filtered = savedEvaluations.filter(av =>
+          av.nomeCliente.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+        displayEvaluations(filtered);
+      }
+
+      window.openTab = function (tabId, event) {
+        document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+        document.getElementById(tabId).classList.add('active');
+
+        document.querySelectorAll('.tab-button').forEach(btn => btn.classList.remove('active'));
+        event.currentTarget.classList.add('active');
+
+        if (tabId === 'saved-tab') loadSavedEvaluations();
+      };
+
+      window.deleteEvaluation = function (index) {
+        if (confirm('Tem certeza que deseja excluir esta avaliação?')) {
+          let savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+          savedEvaluations.splice(index, 1);
+          localStorage.setItem('avaliacoesProfissionais', JSON.stringify(savedEvaluations));
+          loadSavedEvaluations();
+        }
+      };
+
+      window.editEvaluation = function (index) {
+        let savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+        const av = savedEvaluations[index];
+
+        document.getElementById('nomeCliente').value = av.nomeCliente;
+        document.getElementById('tipoPele').value = av.tipoPele;
+        document.getElementById('oleosidade').value = av.oleosidade;
+        document.getElementById('sugestaoProtocolo').value = av.sugestaoProtocolo;
+
+        document.querySelectorAll('input[name="presenca[]"]').forEach(cb => {
+          cb.checked = av.presenca.includes(cb.value);
+        });
+
+        editIndexInput.value = index;
+
+        openTab('form-tab', { currentTarget: document.querySelector('.tab-button') });
+      };
+
+      // Função para gerar PDF
+      window.downloadPDF = function(index) {
+        let savedEvaluations = JSON.parse(localStorage.getItem('avaliacoesProfissionais')) || [];
+        const av = savedEvaluations[index];
+
+        const doc = new jsPDF();
+        doc.setFont("helvetica", "normal");
+
+        // Cabeçalho
+        doc.setFontSize(18);
+        doc.text("Kenpri Clinic", 105, 20, { align: "center" });
+
+        doc.setFontSize(12);
+        doc.text("Avaliação Profissional", 105, 30, { align: "center" });
+        doc.line(20, 35, 190, 35);
+
+        // Dados principais
+        doc.setFontSize(12);
+        doc.text(`Cliente: ${av.nomeCliente}`, 20, 50);
+        doc.text(`Data: ${av.data}`, 20, 60);
+
+        doc.text(`Tipo de Pele: ${av.tipoPele || "Não informado"}`, 20, 75);
+        doc.text(`Oleosidade: ${av.oleosidade || "Não informado"}`, 20, 85);
+
+        // Presença
+        doc.text("Presença de:", 20, 100);
+        let presenca = av.presenca.length > 0 ? av.presenca.join(", ") : "Nenhuma";
+        doc.text(presenca, 20, 110);
+
+        // Sugestão de protocolo
+        doc.text("Sugestão de Protocolo:", 20, 130);
+        let texto = doc.splitTextToSize(av.sugestaoProtocolo || "Nenhuma", 170);
+        doc.text(texto, 20, 140);
+
+        // Rodapé
+        doc.line(20, 270, 190, 270);
+        doc.setFontSize(10);
+        doc.text("📍 Kenpri Clinic — Cuidar da sua pele é o nosso propósito.", 105, 280, { align: "center" });
+
+        doc.save(`Avaliacao_${av.nomeCliente}.pdf`);
+      }
+    });
+  </script>
+</body>
+</html>
